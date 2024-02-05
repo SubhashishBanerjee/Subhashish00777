@@ -143,14 +143,30 @@ ORDER BY num_stations DESC;
 
 **RESULT8** https://drive.google.com/file/d/1D6RYmUr4jZDVDJB8jAKts4oCF3zrZ7Yvq/view?usp=sharing
 
-**QUESTION9** 
+**QUESTION9**  Which hospitals have the highest increase in total discharges between 2011 and 2012 ?
 
-**ANSWER9**
 
-**RESULT9**
+**ANSWER9**  SELECT
+  t2.provider_name,
+  t2.total_discharges - t1.total_discharges AS discharge_increase
+FROM `bigquery-public-data.medicare.inpatient_charges_2011` AS t1
+JOIN `bigquery-public-data.medicare.inpatient_charges_2012` AS t2
+ON t1.provider_id = t2.provider_id
+ORDER BY discharge_increase DESC
+LIMIT 10;
 
-**QUESTION10**
 
-**ANSWER10**
+**RESULT9** https://drive.google.com/file/d/1ZtNzRXneB-Uf2Sc7AsgFm-zQsQSmx2wI/view?usp=sharing
 
-**RESULT10**
+**QUESTION10** Analyze how average Medicare payments per discharge changed for specific DRGs ?
+
+**ANSWER10** SELECT
+  t2.drg_definition,
+  (t2.average_medicare_payments / t2.total_discharges) - (t1.average_medicare_payments / t1.total_discharges) AS avg_payment_change_per_discharge
+FROM `bigquery-public-data.medicare.inpatient_charges_2011` AS t1
+JOIN `bigquery-public-data.medicare.inpatient_charges_2012` AS t2
+ON t1.drg_definition = t2.drg_definition
+WHERE t1.total_discharges > 0 AND t2.total_discharges > 0
+ORDER BY avg_payment_change_per_discharge DESC
+
+**RESULT10** https://drive.google.com/file/d/1PPYf8rcUWfezcqeBQGB4NNPSRjBrToC94/view?usp=sharing
